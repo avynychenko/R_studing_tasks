@@ -26,5 +26,3 @@ obj <- ggplot(data = mydata , aes(x = Hair, y = Freq, fill = Eye)) +
   scale_fill_manual(values=c("Brown", "Blue", "Darkgrey", "Darkgreen"))
 obj
 
-
-ПРИВЕТ!!!!!
