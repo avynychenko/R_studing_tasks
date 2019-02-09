@@ -26,3 +26,13 @@ obj <- ggplot(data = mydata , aes(x = Hair, y = Freq, fill = Eye)) +
   scale_fill_manual(values=c("Brown", "Blue", "Darkgrey", "Darkgreen"))
 obj
 
+# Постройте scatterplot по данным iris, сохранив его в переменную my_plot : 
+# Ось X - переменная Sepal.Width
+# Ось Y -  переменная Petal.Width
+# Цвет точек - переменная Species
+# Также добавьте линейное сглаживание для каждой группы наблюдений по переменной Species
+
+
+my_plot <- ggplot(iris, aes(Sepal.Width, Petal.Width, col = Species)) +
+  geom_point(size = 2) +
+  geom_smooth(method = "lm")
