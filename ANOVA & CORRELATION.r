@@ -97,3 +97,29 @@ corr.calc <- function(x) {
   fit <- cor.test(~ x[, 1] + x[, 2], x)
   return(as.vector(c(fit$estimate, fit$p.value)))
 }
+
+# Напишите функцию, которая на вход получает dataframe с двумя количественными переменными, а возвращает стандартизованные 
+# коэффициенты для регрессионной модели, в которой первая переменная датафрейма выступает в качестве зависимой, а вторая в 
+# качестве независимой.
+
+beta.coef <- function (x) {
+  scaled_var <- scale(x)
+  fit <- lm(scaled_var[, 1] ~ scaled_var[, 2])
+  return(fit$coefficients)
+} 
+
+# или:
+
+library(QuantPsyc)
+beta.coef <- function (x) {
+  return(lm.beta(lm(x[, 1] ~ x[, 2])))
+}
+
+# Напишите функцию normality.test, которая получает на вход dataframe с количественными переменными, проверяет распределения 
+# каждой переменной на нормальность с помощью функции shapiro.test. Функция должна возвращать вектор с значениями p - value, 
+# полученного в результате проверки на нормальность каждой переменной. Названия элементов вектора должны совпадать с названиями 
+# переменных. 
+
+normality.test <- function(x) {
+  return(apply(x, 2, function (i) shapiro.test(i)$p.value))
+}
