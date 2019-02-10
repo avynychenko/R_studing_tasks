@@ -36,3 +36,22 @@ obj
 my_plot <- ggplot(iris, aes(Sepal.Width, Petal.Width, col = Species)) +
   geom_point(size = 2) +
   geom_smooth(method = "lm")
+
+
+  # Напишите функцию resid.norm, которая тестирует распределение остатков от модели на нормальность при помощи функции 
+  # shapiro.test и создает гистограмму при помощи функции ggplot() с красной заливкой "red", если распределение остатков 
+  # значимо отличается от нормального (p < 0.05), и с зелёной заливкой "green" - если распределение остатков значимо не отличается 
+  # от нормального. 
+# На вход функция получает регрессионную модель. Функция возвращает переменную, в которой сохранен график ggplot.
+
+resid.norm <- function(x) {
+  if (shapiro.test(x$residuals)$p.value < 0.05) {
+    myplot <- ggplot(x$model, aes(x$residuals)) +
+      geom_histogram(fill = "red")
+  } else {
+    myplot <- ggplot(x$model, aes(x$residuals)) +
+      geom_histogram(fill = "green")
+  }
+  return(myplot)
+}
+
