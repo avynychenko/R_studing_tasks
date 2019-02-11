@@ -55,5 +55,4 @@ resid.norm <- function(x) {
   return(myplot)
 }
  
- ПРИВЕТ
 
