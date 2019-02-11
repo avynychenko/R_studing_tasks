@@ -55,4 +55,8 @@ resid.norm <- function(x) {
   return(myplot)
 }
  
+# Постройте график распределения частот переменной color, на котором за цвет заполнения столбиков отвечает переменная cut. 
+# Сохраните код графика в переменную obj.
 
+obj <- ggplot(diamonds, aes(x = color, fill = cut)) +
+  geom_histogram(stat = "count", position = position_dodge())

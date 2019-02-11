@@ -65,3 +65,11 @@ most_significant <- function(x) {
   return(colnames(x)[which(chi == min(chi))])
 }
 
+# Функция должна находить ячейку таблицы сопряженности с максимальным  значением стандартизированного остатка и возвращать 
+# вектор из двух элементов: название строчки и столбца этой ячейки.
+
+max_resid <- function(x) {
+  stdres <- chisq.test(table(x))$stdres
+  max_one <- which(stdres == max(stdres), arr.ind = TRUE)
+  return(c(rownames(stdres)[max_one[1]], colnames(stdres)[max_one[2]]))
+}
