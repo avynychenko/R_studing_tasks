@@ -60,3 +60,9 @@ resid.norm <- function(x) {
 
 obj <- ggplot(diamonds, aes(x = color, fill = cut)) +
   geom_histogram(stat = "count", position = position_dodge())
+
+#ToothGrowth. Изобразите различия длины зубов морских свинок в различных условиях дозировки и типа потребляемого продукта.
+#По оси x - переменная supp. По оси y - переменная len. Цвет ящиков с усами (boxplot) - переменная dose. 
+
+obj <- ggplot(data = ToothGrowth, aes(supp, len, fill = dose)) +
+  geom_boxplot()
