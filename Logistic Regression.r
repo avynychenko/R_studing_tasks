@@ -10,6 +10,24 @@ most_suspicious <- function(test_data, data_for_prediction) {
   return(as.vector(data_for_prediction[max_prob, "passangers"]))
 }
 
+# Напишите функцию get_features , которая получает на вход набор данных о багаже. Строит логистическую регрессию, где зависимая 
+# переменная  - являлся ли багаж запрещенным, а предикторы - остальные переменные, и возвращает вектор с названиями 
+# статистически значимых переменных (p < 0.05) (в модели без взаимодействия). Если в данных нет значимых предикторов, функция 
+# возвращает строку с сообщением  "Prediction makes no sense".
+
+get_features <- function(x) {
+  fit <- glm(is_prohibited ~ ., x, family = "binomial")
+  result <- anova(fit, test = "Chisq")
+  p <- result$`Pr(>Chi)`
+  z <- which(p < 0.05)
+    if (length(z) >= 1) {
+    output <- rownames(result)[z]
+  } else {
+    output <- "Prediction makes no sense"
+  }
+  return(output)
+}
+
 # По имеющимся данным в переменной admit постройте логистическую регрессионную модель, предсказывающую результат поступления 
 # по престижности учебного заведения среднего образования и результатов GPA (переменная gpa) с учётом их взаимодействия. 
 # Примените эту модель к той части данных, где результат поступления неизвестен.
@@ -24,6 +42,26 @@ data_for_prediction <- df[is.na(df$admit),]
 data_for_prediction$prediction <- predict(fit, data_for_prediction, type = "response")
 data_for_prediction$enrollment <- ifelse(data_for_prediction$prediction >= 0.4, 1, 0)
 sum(data_for_prediction$enrollment)
+
+#Напишите функцию normality_by, которая принимает на вход dataframe c тремя переменными. Первая переменная количественная, 
+#вторая и третья имеют две градации и разбивают наши наблюдения на группы. Функция должна проверять распределение на нормальность 
+#в каждой получившейся группе и возвращать dataframe с результатами применения теста shapiro.test 
+
+normality_by <- function (test_data) {
+  names(test_data)[1] <- c("p_value")
+  test_data %>%
+    group_by_at(names(test_data)[2:3]) %>%
+    summarise(p_value = shapiro.test(p_value)$p.value)
+}
+
+#альтернативно также можно:
+
+normality_by <- function (test_data) {
+  data <- aggregate(test_data[,1] ~ test_data[,2] + test_data[,3], 
+                    FUN = function(i) shapiro.test(i)$p.value)
+  names(data) <- c(names(test_data)[2:3], "p_value")
+  return(data)
+}
 
 # Написать функцию centered, которая получает на вход датафрейм и имена переменных, которые необходимо центрировать. 
 #Функция должна возвращать этот же датафрейм, только с центрированными указанными переменными.

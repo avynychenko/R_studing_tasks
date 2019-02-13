@@ -66,3 +66,8 @@ obj <- ggplot(diamonds, aes(x = color, fill = cut)) +
 
 obj <- ggplot(data = ToothGrowth, aes(supp, len, fill = dose)) +
   geom_boxplot()
+
+# При помощи библиотеки ggplot2 визуализируйте распределение переменной Sepal.Length в трех группах в данных Iris. 
+
+plot <- ggplot(iris, aes(Sepal.Length, fill = Species)) +
+  geom_density(alpha = 0.5)
