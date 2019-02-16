@@ -16,3 +16,17 @@ fix_data <- function(d){
   num[is.na(num)] <- data[which(is.na(num))]
   return(num)
 }
+
+# Для df avianHabitat создать новые переменные site_name и total_coverage, чтобы определить тот регион, в котором среднее 
+# общее покрытие наименьшее.
+
+data <- read.csv("avianHabitat.csv")
+data$Site <- as.character(data$Site)
+data$site_name <- factor(str_replace(data$Site, "[:digit:]+", ""))
+coverage_vars <- names(data)[str_detect(names(data), "^P")]
+data$total_coverage <- apply(data[coverage_vars], 1, sum)
+
+data %>% 
+  group_by(site_name) %>% 
+  summarise(mean = mean(total_coverage)) %>% 
+  arrange(mean)
