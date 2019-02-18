@@ -6,6 +6,52 @@ airquality$Month <- factor(airquality$Month, levels = c('5', '6', '7', '8', '9')
 ggplot(airquality, aes(x = Month, y = Ozone)) +
   geom_boxplot(col = "blue")
 
+# Отобразим на графике различия в продажах (переменная sale), в зависимости от года и номера магазина.
+
+my_plot <-  ggplot(sales, aes(date, sale, col = shop)) +
+  stat_summary(fun.data = mean_cl_boot, geom = "errorbar", width = .2,
+               position = position_dodge(.5)) +
+  stat_summary(fun.y = mean, geom = "point", size = 2, position = position_dodge(.5)) +
+  stat_summary(fun.y = mean, geom = "line", position = position_dodge(.5))
+
+# Построить следующий график, чтобы выяснить есть ли различия в бюджетах фильмов разного жанра из года в год. 
+
+my_plot <- ggplot(data, aes(Type, Budget)) +
+  geom_boxplot() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  facet_grid(. ~ Year)
+
+# Используя данные iris, постройте график плотности для переменной Sepal.Length. Разбейте график на части по переменной Species.
+
+sl_wrap <- ggplot(iris, aes(Sepal.Length)) +
+  geom_density() +
+  facet_wrap( ~ Species)
+
+# Отобразить взаимосвязь переменных Sepal.Length (ось X) и Petal.Length (ось Y) внутри трех групп по переменной Species. 
+# Для этого отобразите цветом значения переменной Species и добавьте линейное сглаживание в каждой группе. Также, перевести
+# на русский название осей и легенд  и изменить отображение по осям.
+
+iris_plot <- ggplot(iris, aes(Sepal.Length, Petal.Length, col = Species)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  scale_x_continuous(name = "Длина чашелистика", breaks = 4:8, limits = c(4, 8)) +
+  scale_y_continuous(name = "Длина лепестка", breaks = 1:7) +
+  scale_color_discrete(name = "Вид цветка",
+                       labels=c("Ирис щетинистый", "Ирис разноцветный", 
+                                "Ирис виргинский"))
+
+# При помощи функции stat_summary постройте график с доверительными интервалами для демонстрации различий в доходах двух магазинов 
+# с учетом времени года.
+
+my_plot <- ggplot(sales, aes(shop, income, col = season)) +
+  stat_summary(fun.data = mean_cl_boot, position = position_dodge(.2)) 
+
+# Отобразите взаимосвязь между доходом (income) и числом продаж (sale), цветом точек указав номер магазина (shop). Сохраните 
+# график в переменную my_plot. Обратите внимание, что линия тренда одна для всех наблюдений.
+
+my_plot <- ggplot(sales, aes(income, sale)) +
+  geom_point(aes(col = shop)) +
+  geom_smooth()
 
 #   массив mtcars. Нужно построить scatterplot с помощью ggplot из ggplot2, по оси x которого будет mpg, по оси y - disp, а 
 # цветом отобразить переменную (hp).
@@ -71,3 +117,8 @@ obj <- ggplot(data = ToothGrowth, aes(supp, len, fill = dose)) +
 
 plot <- ggplot(iris, aes(Sepal.Length, fill = Species)) +
   geom_density(alpha = 0.5)
+
+  # Построить график violin plot для переменной price в каждой группе наблюдений по переменной color. Сохраните результа в 
+  # переменную price_violin.
+
+  price_violin <- qplot(x = color, y = price, data = diamonds, geom = I("violin"))
