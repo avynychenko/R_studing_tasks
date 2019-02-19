@@ -12,6 +12,9 @@ make.fancy.teapot <- function(teapot.coords) {
           alphahull = 0)
 }
 
+data <- read.csv(https://raw.githubusercontent.com/avynychenko/R_studing_tasks/master/Data%20for%20tasks/teapot.csv)
+make.fancy.teapot(data)
+
 # При помощи функции ggplot() или boxplot() постройте график boxplot, используя встроенные в R данные airquality. По оси x 
 # отложите номер месяца, по оси y — значения переменной Ozone.
 
