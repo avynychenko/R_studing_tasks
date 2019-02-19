@@ -1,3 +1,17 @@
+# teapot/plotly
+# Напишите функцию, которая будет принимать data.table с данными, которые содержит информацию о полигонах трехмерной модели чайника
+#  и возвращать объект plotly с трехмерной моделью. 
+
+library(plotly)
+
+make.fancy.teapot <- function(teapot.coords) {
+  i.s <- seq(0, (nrow(teapot.coords)-1), 3)
+  j.s <- seq(1, nrow(teapot.coords), 3)
+  k.s <- seq(2, nrow(teapot.coords), 3)
+  plot_ly(data, x = ~x, y = ~y, z = ~z, i = ~i.s, j = ~j.s, k = ~k.s, type = "mesh3d", 
+          alphahull = 0)
+}
+
 # При помощи функции ggplot() или boxplot() постройте график boxplot, используя встроенные в R данные airquality. По оси x 
 # отложите номер месяца, по оси y — значения переменной Ozone.
 
