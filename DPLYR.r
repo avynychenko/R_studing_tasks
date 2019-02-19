@@ -26,6 +26,35 @@ to_factors <- function(test_data, factors){
     mutate_at(factors, funs(factor(ifelse(. > mean(.), 1, 0))))
 }
 
+# avianHabitat. Произведите следующий подсчёт по всем комбинациям места (Site) и наблюдателя (Observer). Интересующая нас 
+# статистика -- количество тех замеров, где обнаруживается хотя бы один экземпляр вида. Соберите эту статистику по всем видам. 
+# У вас получится таблица, в которой тройке вида (место M, наблюдатель N, вид P) соответствует число замеров в M, произведенных N, 
+# где обнаружен хотя бы один P.
+
+library(tidyr)
+library(dplyr)
+library(data.table)
+library(stringr)
+
+data <- read.csv("https://raw.githubusercontent.com/avynychenko/R_studing_tasks/master/Data%20for%20tasks/avianHabitat.csv")
+
+data$Site <- as.character(data$Site)
+data$site_name <- factor(str_replace(data$Site, "[:digit:]+", ""))
+
+ht_vars <- names(data)[str_detect(names(data), ".Ht$")]
+ht_new_vars <- str_replace(ht_vars, "Ht$", "")
+setnames(data, old = ht_vars, new = ht_new_vars)
+
+new_df <- select(data, site_name, 2, ht_new_vars)
+
+gathered_data <- gather(new_df, plants, height , -(1:2))
+
+result <- gathered_data %>% 
+  filter(height > 0) %>% 
+  group_by(site_name, Observer, plants) %>% 
+  summarise(n = n())
+
+
 # Напишите функцию find_outliers, которая получает на вход dataframe с одной количественной переменной и произвольным числом 
 # факторных переменных. Факторные переменные разбивают все наши наблюдения на определенное число групп. Итак, ваша задача — 
 # создать в данных новую числовую переменную is_outlier, которая будет принимать значение 1, если наблюдение в этой строке 
