@@ -1,0 +1,133 @@
+---
+title: "Analysis of annual incomes and spending capacity depending on gender"
+author: "Anastasiia Vynychenko"
+date: '21 February 2019'
+output: 
+  pdf_document:
+    toc: TRUE
+  html_document:
+    toc: TRUE
+    toc_float: TRUE
+params:
+  file: "https://raw.githubusercontent.com/avynychenko/R_studing_tasks/master/Data%20for%20tasks/Mall_Customers.csv"
+urlcolor: blue
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+library(dplyr)
+library(ggplot2)
+```
+
+### Intro
+
+The main purpose of this analysis is to understand if there is some connections between "spending money capacity" and gender.
+For resolving this issue, data was taken from resource: <https://www.kaggle.com/> [^1]
+
+[^1]:[Direct link for downloading file](https://www.kaggle.com/vjchoudhary7/customer-segmentation-tutorial-in-python)
+
+Here you can see how the header of data looks like:
+```{r read}
+data <- read.csv(params$file)
+new_data <- data %>% 
+  rename(annual_income = Annual.Income..k..,
+         spending_score = Spending.Score..1.100.) %>% 
+  mutate(annual_income = annual_income*1000)
+head(new_data)
+```
+
+### Analyzing part
+
+#### Correlation between gender and annual income
+
+Let's take a look to our data set. First of all, we want to understand quantity of Female & Male in our data and how age in each subgroup is distributed.
+
+Here is summary of data:
+
+```{r summary}
+new_data %>% 
+  group_by(Gender) %>% 
+  summarise(quantity = n(),
+            max_age = max(Age),
+            mean_age = mean(Age),
+            min_age = min(Age),
+            mean_income = mean(annual_income)
+            )
+```
+
+From this tibble we can see that all indicators almost equal. We also can see that mean age in male and female groups also equal, the same situation with income, etc. Only a small difference in quantity of participants, but it's no so huge. That's why we can carry on with our analysis.
+Despite the fact that we saw the summary table, it's better to visualize our data.
+
+```{r}
+ggplot(new_data, aes(Age, annual_income, col = Gender)) +
+  geom_point(size = 2) + 
+  scale_y_continuous(name = "Annual income per year",
+                     breaks = seq(15000, 140000, length.out = 5)) +
+  theme_bw() +
+  scale_color_brewer(type = "qual", palette = 6 )
+```
+
+From this graph we can see that in our data we almost don't have difference between gender and income that people gain per year.
+
+Finally let's try to prove this hypotesis with **ANOVA analysis**.
+
+```{r}
+summary(aov(annual_income ~ Gender, new_data))
+```
+
+We received P-value = 0.428 that tell us that we can accept this hypotesis, telling us that people in two groups (Female and Male) don't have differences in their incomes.
+
+#### Clusterizing
+
+The next step, which help us to understand our data better is to split customers to different group, which will be different, in comparison with Gender characteristics.
+
+Let's do this with hierarchical clusterization. First of all we should choose what amounts of clusters we want to pick out.
+
+Consider this graph:
+
+```{r}
+data <- new_data[sapply(new_data, is.numeric)]
+fit <- hclust(dist(data))
+plot(fit)
+rect.hclust(fit, 6) 
+```
+
+Analyzing this graph, it will be optimally to choose 6 clusters. Let's assign all customers to specific cluster and compare these groups again with ANOVA analysis. 
+```{r}
+cutting <- cutree(fit, 6)
+data$cluster <- factor(cutting)
+new_data$cluster <- factor(cutting)
+ddd <- apply(data[-length(data)], 2, function(i) anova(aov(i ~ cluster, data))$P[1])
+ddd[ddd<0.05]
+```
+
+Here we can see p-value for variables that less then 0.05. It means that differences in all these groups (dividing by clusters) significant and we can't accept hypotesis that all groups are equal.
+
+#### Analyzing of spending money
+
+Well, now we can look at graph and see what behaviour of "spending money capacity" for all 6 subgroups of customers.
+
+```{r}
+ggplot(new_data, aes(annual_income, spending_score, col = cluster)) +
+  geom_point() +
+  scale_y_discrete(name = "Spending score", 
+                   breaks = seq(0, 100, by = 20)) +
+  scale_x_continuous(name = "Income per year", breaks = seq(15000, 110000, length.out = 2)) +
+  facet_wrap(~Gender) +
+  theme_bw() +
+  scale_color_brewer(type = "qual", palette = 6 )
+```
+
+Here we can see no difference in behaviour of spending money eather it female or male. 
+We only can see difference depending on cluster, which we assigned to each customer.
+
+### Conclusion
+
+So, in conclusion we can claim:
+
+1. There is no difference in "spending money capacity" between genders.
+2.  There is an existing difference in "spending money capacity", depending on subgroups (clusters), which we can assign based on annual incomes and ages of customers.
+    + customers from 1, 4, 5, 6 groups prone to spend or too much (high score),        or too small (low score) ammount of money. But it's interesting, that the        1st group has the        smalest income, while 4-6 groups have the highest       incomes.
+    + customers from 2 and 3 groups prone to spend money in the average level of       "spending score" and this type of clients also have average incomes per          year.
+3. It requires more data to analyze why customers from 1, 4, 5, 6 groups behaves differently. Perhaps we will have influence of other factors, which we don't have in this dataset.
+
