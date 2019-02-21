@@ -70,6 +70,23 @@ my_plot <- ggplot(sales, aes(income, sale)) +
   geom_point(aes(col = shop)) +
   geom_smooth()
 
+# В данных swiss, используя все переменные, выделите два кластера при помощи иерархической кластеризации и сохраните значение 
+# кластеров как фактор в переменную cluster. Затем визуализируйте взаимосвязь переменных  Education и  Catholic в двух выделенных 
+# кластерах.
+
+get_difference <-  function(test_data, cluster_number){
+  data <- test_data[sapply(test_data, is.numeric)]
+  fit <- hclust(dist(data))
+  test_data$cluster <- factor(cutree(fit, cluster_number))
+  return(test_data)
+}
+
+df <- get_difference(swiss, 2)
+
+ggplot(df, aes(Education, Catholic, col = cluster)) +
+  geom_point() +
+  geom_smooth(method = "lm")
+
 #   массив mtcars. Нужно построить scatterplot с помощью ggplot из ggplot2, по оси x которого будет mpg, по оси y - disp, а 
 # цветом отобразить переменную (hp).
 

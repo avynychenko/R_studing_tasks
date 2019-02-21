@@ -30,6 +30,22 @@ df$patient <- factor(df$patient)
 fit2 <- aov(df$temperature ~ doctor*pill + Error(df$patient/(pill*doctor)), df)
 summary(fit2)
 
+# Напишите функцию is_multicol, которая получает на вход dataframe произвольного размера с количественными переменными. 
+# Функция должна проверять существование строгой мультиколлинеарности, а именно наличие линейной комбинации между предикторами. 
+# Функция возвращает имена переменных, между которыми есть линейная зависимость или cобщение "There is no collinearity in the data".
+
+is_multicol <- function(d){
+  correlation <- cor(d)
+  diag(correlation) <- 0
+  logical <- apply(abs(correlation), 1:2, function(i) all.equal(i, 1))
+  if(any(logical == TRUE)) {
+    result <- dimnames(which(logical == TRUE, arr.ind = T))[[1]]
+  } else {
+    result <- "There is no collinearity in the data"
+  }
+  return(result)
+}
+
 # Провести однофакторный дисперсионный анализ с повторными измерениями: влияние типа таблетки (pill) на температуру (temperature) с 
 #учётом испытуемого (patient). Каково p-value для влияния типа таблеток на температуру?
 
