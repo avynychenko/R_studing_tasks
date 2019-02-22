@@ -3,11 +3,11 @@ title: "Analysis of annual incomes and spending capacity depending on gender"
 author: "Anastasiia Vynychenko"
 date: '21 February 2019'
 output: 
-  pdf_document:
-    toc: TRUE
   html_document:
     toc: TRUE
     toc_float: TRUE
+  pdf_document:
+    toc: TRUE
 params:
   file: "https://raw.githubusercontent.com/avynychenko/R_studing_tasks/master/Data%20for%20tasks/Mall_Customers.csv"
 urlcolor: blue
@@ -17,6 +17,7 @@ urlcolor: blue
 knitr::opts_chunk$set(echo = FALSE)
 library(dplyr)
 library(ggplot2)
+library(plotly)
 ```
 
 ### Intro
@@ -40,7 +41,7 @@ head(new_data)
 
 #### Correlation between gender and annual income
 
-Let's take a look to our data set. First of all, we want to understand quantity of Female & Male in our data and how age in each subgroup is distributed.
+Let's take a look to our data set. First of all, we want to understand quantity of Female & Male in our data and how age in each group is distributed.
 
 Here is summary of data:
 
@@ -59,12 +60,12 @@ From this tibble we can see that all indicators almost equal. We also can see th
 Despite the fact that we saw the summary table, it's better to visualize our data.
 
 ```{r}
-ggplot(new_data, aes(Age, annual_income, col = Gender)) +
+ggplotly(ggplot(new_data, aes(Age, annual_income, col = Gender)) +
   geom_point(size = 2) + 
   scale_y_continuous(name = "Annual income per year",
                      breaks = seq(15000, 140000, length.out = 5)) +
   theme_bw() +
-  scale_color_brewer(type = "qual", palette = 6 )
+  scale_color_brewer(type = "qual", palette = 6 ))
 ```
 
 From this graph we can see that in our data we almost don't have difference between gender and income that people gain per year.
@@ -79,7 +80,7 @@ We received P-value = 0.428 that tell us that we can accept this hypotesis, tell
 
 #### Clusterizing
 
-The next step, which help us to understand our data better is to split customers to different group, which will be different, in comparison with Gender characteristics.
+The next step, which help us to understand our data better is to split customers to different groups, which will be different, in comparison with Gender characteristics.
 
 Let's do this with hierarchical clusterization. First of all we should choose what amounts of clusters we want to pick out.
 
@@ -108,14 +109,14 @@ Here we can see p-value for variables that less then 0.05. It means that differe
 Well, now we can look at graph and see what behaviour of "spending money capacity" for all 6 subgroups of customers.
 
 ```{r}
-ggplot(new_data, aes(annual_income, spending_score, col = cluster)) +
+ggplotly(ggplot(new_data, aes(annual_income, spending_score, col = cluster)) +
   geom_point() +
   scale_y_discrete(name = "Spending score", 
                    breaks = seq(0, 100, by = 20)) +
   scale_x_continuous(name = "Income per year", breaks = seq(15000, 110000, length.out = 2)) +
   facet_wrap(~Gender) +
   theme_bw() +
-  scale_color_brewer(type = "qual", palette = 6 )
+  scale_color_brewer(type = "qual", palette = 6 ))
 ```
 
 Here we can see no difference in behaviour of spending money eather it female or male. 
