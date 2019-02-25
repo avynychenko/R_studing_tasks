@@ -152,7 +152,19 @@ obj <- ggplot(data = ToothGrowth, aes(supp, len, fill = dose)) +
 plot <- ggplot(iris, aes(Sepal.Length, fill = Species)) +
   geom_density(alpha = 0.5)
 
-  # Построить график violin plot для переменной price в каждой группе наблюдений по переменной color. Сохраните результа в 
-  # переменную price_violin.
+# Построить график violin plot для переменной price в каждой группе наблюдений по переменной color. Сохраните результа в 
+# переменную price_violin.
 
   price_violin <- qplot(x = color, y = price, data = diamonds, geom = I("violin"))
+
+  # Постройте график, отображающий различие в высоте голоса (frequency)﻿ для каждого предложения (scenario) в зависимости от 
+  # типа социальной ситуации (attitude). 
+
+  plot_1 <- ggplot(exp_data, aes(factor(scenario), frequency, fill = attitude)) +
+  geom_boxplot()
+
+  # Визуализируйте распределение высоты голоса у испытуемых в зависимости от пола и номера испытуемого.
+
+  plot_2 <- ggplot(exp_data, aes(frequency, fill = subject)) +
+  geom_density(alpha = 0.5) +
+  facet_grid(gender ~ .)
