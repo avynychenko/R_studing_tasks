@@ -18,11 +18,9 @@ best <- function(state, outcome) {
   if (nrow(state_data) == 0) {
     stop('invalid state')
   }
-  options(warn = -1) 
-  tryCatch( {result <- as.data.table(state_data)[order(as.numeric(get(outcome)))][1, 2]; 
-              print(result)}, error = function(x) stop("invalid outcome"))
+  res <- tryCatch( {result <- as.data.table(state_data)[order(as.numeric(get(outcome)))][1, 2]; 
+              print(result)}, error = function(x) "1")
+  if (res == "1") {
+    stop("invalid output")
+  }
 }
-
-# + to filter data without NA, and omit options()
-
-# + to do second error pretier
