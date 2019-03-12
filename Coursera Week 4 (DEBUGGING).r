@@ -10,7 +10,8 @@
 
 
 best <- function(state, outcome) {
-  data <- read.csv("outcome-of-care-measures.csv", colClasses = "character")
+  data <- read.csv("https://raw.githubusercontent.com/avynychenko/R_studing_tasks/master/Data%20for%20tasks/Coursera%20Week%204%20debugging/outcome-of-care-measures.csv", 
+  colClasses = "character")
   names(data)[c(11, 17, 23)] <- c("heart attack", "heart failure", "pneumonia")
   data$State <- as.factor(data$State)
   state_data <- data %>%
