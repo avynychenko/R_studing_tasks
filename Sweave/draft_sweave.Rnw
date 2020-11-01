@@ -1,0 +1,99 @@
+\documentclass{article}
+
+\title{Test title}
+\author{Anastasiia Vynychenko}
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+\newpage
+
+\section{Section 1}
+
+Text in section 1. 
+
+Another text in section 1.
+
+We need to calculate ${13 \choose 9}$
+
+<<echo=FALSE>>=
+sum(13,14,15)
+@
+
+\section{Section 2}
+\begin{enumerate}
+  \item This is a subpoint 1. A lot of different text.bsaspsd ajalspd sjsjdlkso akhjcdohsh aslsdhkds kdsjdhkdshjk ksdg dskdsbkds dfddf. \\
+
+Solution: \\
+\textbf{djklds } sdkdsajklsd sacksdjlsad dsjldsjsad jdjdsjldas dckcdhsa:
+\[
+P(X=2)=\frac{{6 \choose 2}{5 \choose 3}}{{11 \choose 5}}
+\]
+
+<<>>=
+dhyper(2, 6, 5, 5)
+@
+
+  \item This is a subpoint 2. A lot of different text.bsaspsd ajalspd sjsjdlkso akhjcdohsh aslsdhkds kdsjdhkdshjk ksdg dskdsbkds dfddf. A lot of different text.bsaspsd ajalspd sjsjdlkso akhjcdohsh aslsdhkds kdsjdhkdshjk ksdg dskdsbkds dfddf. \\
+  
+  
+Solution: \\
+djklds sdkdsajklsd sacksdjlsad dsjldsjsad jdjdsjldas dckcdhsa:
+
+\[
+P(X \ge 3)=P(X \le 2)=1-\frac{4567}{54678}
+\]
+
+<<echo=FALSE>>=
+1 - phyper(2, 4, 4, 5)
+@
+
+  \item This is a subpoint 3.
+\end{enumerate}
+
+
+\section{Section 3}
+A text for section 3, bla-bla. Section 3 text.
+
+\begin{itemize}
+  \item Sub-point for point 1 \\
+Solution: \\
+\[
+P(X=10)={30 \choose 10}0.5^{10} 0.5^{20}
+\]
+
+<<>>=
+dbinom(10, 30, 0.5)
+@
+
+  \item Sub-point for point 2. \\
+Solutions: \\  
+bns.dcds.c jlkkjhgfcghjkl;lknbv fgdskjhds dfjklskjdxkd jkskflkjnbcnm jklkjnvcm,xd klvkjcnfmz,x bn,kjhgfghjk ghjkl vjklkjhvcvhjk bjkjhbvbnm \\
+Need to calculate $P(X \ge 10)$.
+
+\[
+P(X \ge 10)=1-P(X \le 9)=1 - \sum_{i=0}^9 {30 \choose i}0.5^i 0.5^{30-i}
+\]
+
+<<>>=
+1-pbinom(9, 30, 0.5)
+@
+
+\end{itemize}
+
+\section{Section 4}
+
+In this example we embed parts of the examples from the
+\texttt{kruskal.test} help page into a \LaTeX{} document:
+
+\newpage
+\subsection{Sub-section}
+There is some text in the next sub-section 
+
+<<echo=FALSE>>=
+head(mtcars)
+@
+Number of rows is: \Sexpr{nrow(mtcars)}
+
+\end{document}

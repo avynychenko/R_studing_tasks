@@ -1,15 +1,17 @@
 ---
 title: "Analysis of annual incomes and spending capacity depending on gender"
 author: "Anastasiia Vynychenko"
-date: '22 April 2019'
-output: 
+date: "22 April 2019"
+output:
+  word_document:
+    toc: yes
   html_document:
-    toc: TRUE
-    toc_float: TRUE
+    toc: yes
+    toc_float: yes
   pdf_document:
-    toc: TRUE
+    toc: yes
 params:
-  file: "https://raw.githubusercontent.com/avynychenko/R_studing_tasks/master/Data%20for%20tasks/Mall_Customers.csv"
+  file: https://raw.githubusercontent.com/avynychenko/R_studing_tasks/master/Data%20for%20tasks/Mall_Customers.csv
 urlcolor: blue
 ---
 
@@ -44,7 +46,7 @@ Let's take a look to our data set. First of all, we want to understand quantity 
 
 Here is summary of data:
 
-```{r summary}
+```{r summary, message=FALSE, warning=FALSE}
 new_data %>% 
   group_by(Gender) %>% 
   summarise(quantity = n(),
@@ -66,7 +68,7 @@ ggplotly(ggplot(new_data, aes(Age, annual_income, col = Gender)) +
   scale_color_brewer(type = "qual", palette = 6 ))
 ```
 
-From this graph we can see that in our data there is no correlation between income and age that people gained per year. Also there is no difference in both groupes: male and female.
+From this graph we can see that in our data there is no correlation between income and age that people gained per year. Also there is no difference in both groups: male and female.
 
 Finally let's try to prove this hypotesis with **ANOVA analysis**.
 
